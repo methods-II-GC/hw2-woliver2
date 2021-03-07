@@ -1,13 +1,19 @@
 #!/usr/bin/env python3
-"""An Python command line tool that reads and splits tagging data."""
+"""A Python command line tool that reads and splits tagging data.
 
-from itertools import islice
+This program takes a tagged document and splits it into three separate files
+for training, development, and testing. First, it uses argparse to retrieve user
+provided file paths for the data set and training, development, and testing files.
+Then, it reads the lines of the input file and randomizes them according to a
+given seed. From there, it splits the data into 80% training data, 10% dev data,
+and 10% test data. It then writes the data to the requisite files.  
+"""
+
 import argparse
 import random
 
 
 def main(args: argparse.Namespace) -> None:
-
     with open(args.input, 'r') as text:
         lines = text.readlines()
     random.seed(args.seed)
@@ -19,11 +25,11 @@ def main(args: argparse.Namespace) -> None:
     write_tags(lines, args.dev, train_size, dev_size)
     write_tags(lines, args.test, train_size + dev_size, test_size)
 
+
 def write_tags(text, path, start, size):
     with open(path, 'a') as outfile:
         for line in text[start:start + size]:
             outfile.write(line)
-
 
 
 if __name__ == "__main__":
